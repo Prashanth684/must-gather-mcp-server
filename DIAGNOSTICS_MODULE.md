@@ -159,8 +159,8 @@ go fmt ./...
 go mod tidy
 go build ... -o _output/bin/must-gather-mcp-server ./cmd/must-gather-mcp-server
 
-$ _output/bin/must-gather-mcp-server --must-gather-path /home/psundara/Downloads/must-gather-Prashanth-Testcase-failure
-Loading must-gather from: /home/psundara/Downloads/must-gather-Prashanth-Testcase-failure
+$ _output/bin/must-gather-mcp-server --must-gather-path /path/to/must-gather
+Loading must-gather from: /path/to/must-gather
 Loaded 11100 resources from 69 namespaces
 Building resource index...
 Index built with 10655 resources
@@ -175,7 +175,7 @@ Starting must-gather MCP server...
 The implementation correctly handles the must-gather directory structure:
 
 ```
-must-gather-Prashanth-Testcase-failure/
+must-gather/
 └── quay-io-okd-scos-content-sha256-.../
     ├── namespaces/
     │   └── {namespace}/

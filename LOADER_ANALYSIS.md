@@ -8,7 +8,7 @@ The loader implementation **successfully finds the container directory**, **corr
 
 ### Top-Level
 ```
-/home/psundara/Downloads/must-gather-Prashanth-Testcase-failure/
+/path/to/must-gather/
 ├── camgi.html                      # Analysis HTML report
 ├── event-filter.html               # Event filter HTML report
 ├── must-gather.log                 # Collection log
@@ -225,10 +225,10 @@ Accessed on-demand when requested by tools:
 
 ### Resource Path Examples
 ```
-# Input: --must-gather-path /home/psundara/Downloads/must-gather-Prashanth-Testcase-failure
+# Input: --must-gather-path /path/to/must-gather
 
 # Container dir found:
-/home/psundara/Downloads/must-gather-Prashanth-Testcase-failure/quay-io-okd-scos-content-sha256-.../
+/path/to/must-gather/quay-io-okd-scos-content-sha256-.../
 
 # Cluster-scoped resources loaded from:
 .../cluster-scoped-resources/config.openshift.io/clusteroperators/dns.yaml

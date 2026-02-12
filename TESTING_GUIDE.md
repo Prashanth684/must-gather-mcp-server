@@ -12,8 +12,8 @@ go build ... -o _output/bin/must-gather-mcp-server ./cmd/must-gather-mcp-server
 
 ✅ **Server Startup**
 ```bash
-$ _output/bin/must-gather-mcp-server --must-gather-path /home/psundara/Downloads/must-gather-Prashanth-Testcase-failure
-Loading must-gather from: /home/psundara/Downloads/must-gather-Prashanth-Testcase-failure
+$ _output/bin/must-gather-mcp-server --must-gather-path /path/to/must-gather
+Loading must-gather from: /path/to/must-gather
 Loaded 11100 resources from 69 namespaces
 Building resource index...
 Index built with 10655 resources
@@ -77,7 +77,7 @@ Install and run the MCP inspector:
 
 ```bash
 npx @modelcontextprotocol/inspector _output/bin/must-gather-mcp-server \
-  --must-gather-path /home/psundara/Downloads/must-gather-Prashanth-Testcase-failure
+  --must-gather-path /path/to/must-gather
 ```
 
 ## Sample Tool Calls
@@ -213,7 +213,7 @@ Add to Claude Desktop config (`~/Library/Application Support/Claude/claude_deskt
       "command": "/path/to/must-gather-mcp-server",
       "args": [
         "--must-gather-path",
-        "/home/psundara/Downloads/must-gather-Prashanth-Testcase-failure"
+        "/path/to/must-gather"
       ]
     }
   }

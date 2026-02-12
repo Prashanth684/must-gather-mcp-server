@@ -42,10 +42,10 @@ I've successfully built **Phase 1 (Foundation)** of the must-gather MCP server -
 
 ### Test Results
 
-Successfully tested with `/home/psundara/Downloads/must-gather-Prashanth-Testcase-failure`:
+Successfully tested with sample must-gather:
 
 ```
-Loading must-gather from: /home/psundara/Downloads/must-gather-Prashanth-Testcase-failure
+Loading must-gather from: /path/to/must-gather
 Loaded 11100 resources from 69 namespaces
 Building resource index...
 Index built with 10655 resources
@@ -64,7 +64,7 @@ Starting must-gather MCP server...
 ### Build
 
 ```bash
-cd /home/psundara/ws/src/github.com/openshift/must-gather-mcp-server
+cd /path/to/must-gather-mcp-server
 make build
 ```
 
@@ -84,7 +84,7 @@ Add to your Claude desktop configuration (`~/Library/Application Support/Claude/
 {
   "mcpServers": {
     "must-gather": {
-      "command": "/home/psundara/ws/src/github.com/openshift/must-gather-mcp-server/_output/bin/must-gather-mcp-server",
+      "command": "/path/to/must-gather-mcp-server",
       "args": ["--must-gather-path", "/path/to/your/must-gather"]
     }
   }
@@ -169,7 +169,7 @@ This is **Phase 1** of the implementation plan from `MUST_GATHER_ARCHITECTURE.md
 
 ## Key Files
 
-- `/home/psundara/ws/src/github.com/openshift/must-gather-mcp-server/`
+- `/path/to/must-gather-mcp-server/`
   - `MUST_GATHER_ARCHITECTURE.md` - Comprehensive architectural analysis
   - `README.md` - Usage documentation
   - `Makefile` - Build, test, lint targets
