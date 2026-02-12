@@ -1,0 +1,51 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteTest
+*.out
+
+# Build artifacts
+_output/
+bin/
+dist/
+
+# Go workspace file
+go.work
+
+# Dependency directories
+vendor/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Temporary files
+*.log
+*.tmp
+/tmp/
+.cache/
+
+# Go build cache
+.go/
+
+# Environment files
+.env
+.env.local
+
+# Test coverage
+coverage.txt
+coverage.html
+
+# golangci-lint cache
+.golangci-lint.cache
