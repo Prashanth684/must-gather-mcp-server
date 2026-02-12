@@ -140,26 +140,36 @@ func (p *Provider) GetETCDHealth() (*api.ETCDHealth, error) {
 		return nil, fmt.Errorf("failed to read ETCD health data: %w", err)
 	}
 
-	// Parse health data (format varies, handle both single and array)
-	var endpoints []struct {
-		Endpoint string `json:"endpoint"`
-		Health   bool   `json:"health,string"` // Can be string "true" or bool
+	// Parse health data - handle different formats
+	// First, try to detect if it's an array or object by inspecting the JSON
+	var rawData interface{}
+	if err := json.Unmarshal(healthData, &rawData); err != nil {
+		return nil, fmt.Errorf("failed to parse ETCD health data: %w", err)
 	}
 
-	// Try parsing as array first
-	if err := json.Unmarshal(healthData, &endpoints); err != nil {
-		// Try parsing as single object
-		var singleEndpoint struct {
-			Endpoint string `json:"endpoint"`
-			Health   bool   `json:"health,string"`
+	type healthEndpoint struct {
+		Endpoint string      `json:"endpoint"`
+		Health   interface{} `json:"health"` // Can be bool, string "true"/"false", or nested object
+	}
+
+	var endpoints []healthEndpoint
+
+	// Check if it's an array or single object
+	switch rawData.(type) {
+	case []interface{}:
+		// It's an array
+		if err := json.Unmarshal(healthData, &endpoints); err != nil {
+			return nil, fmt.Errorf("failed to parse ETCD health data array: %w", err)
 		}
+	case map[string]interface{}:
+		// It's a single object
+		var singleEndpoint healthEndpoint
 		if err := json.Unmarshal(healthData, &singleEndpoint); err != nil {
-			return nil, fmt.Errorf("failed to parse ETCD health data: %w", err)
+			return nil, fmt.Errorf("failed to parse ETCD health data object: %w", err)
 		}
-		endpoints = []struct {
-			Endpoint string `json:"endpoint"`
-			Health   bool   `json:"health,string"`
-		}{singleEndpoint}
+		endpoints = []healthEndpoint{singleEndpoint}
+	default:
+		return nil, fmt.Errorf("unexpected ETCD health data format: %T", rawData)
 	}
 
 	health := &api.ETCDHealth{
@@ -170,10 +180,31 @@ func (p *Provider) GetETCDHealth() (*api.ETCDHealth, error) {
 
 	for i, ep := range endpoints {
 		healthStatus := "healthy"
-		if !ep.Health {
+		isHealthy := false
+
+		// Parse health value which can be bool, string, or object
+		switch h := ep.Health.(type) {
+		case bool:
+			isHealthy = h
+		case string:
+			isHealthy = (h == "true" || h == "healthy")
+		case map[string]interface{}:
+			// Health might be nested object with "health" field
+			if healthVal, ok := h["health"]; ok {
+				switch hv := healthVal.(type) {
+				case bool:
+					isHealthy = hv
+				case string:
+					isHealthy = (hv == "true" || hv == "healthy")
+				}
+			}
+		}
+
+		if !isHealthy {
 			healthStatus = "unhealthy"
 			health.Healthy = false
 		}
+
 		health.Endpoints[i] = api.ETCDEndpoint{
 			Address: ep.Endpoint,
 			Health:  healthStatus,

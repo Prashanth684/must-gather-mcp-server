@@ -19,7 +19,7 @@ The must-gather MCP server enables AI assistants to deeply analyze OpenShift clu
 - **Fast Queries**: <50ms for indexed resource lookups
 - **On-Demand Logs**: Logs loaded only when requested
 
-### 🛠️ Tool Categories (21 Tools Across 4 Toolsets)
+### 🛠️ Tool Categories (22 Tools Across 4 Toolsets)
 
 #### Cluster Toolset (6 tools)
 - `cluster_version_get` - OpenShift version, update status, capabilities
@@ -34,7 +34,7 @@ The must-gather MCP server enables AI assistants to deeply analyze OpenShift clu
 - `resources_list` - List resources with label/field selectors
 - `namespaces_list` - List all namespaces
 
-#### Diagnostics Toolset (9 tools)
+#### Diagnostics Toolset (10 tools)
 **Pod Logs:**
 - `pod_logs_get` - Container logs (current/previous) with tail support
 - `pod_containers_list` - Discover containers with logs
@@ -43,6 +43,7 @@ The must-gather MCP server enables AI assistants to deeply analyze OpenShift clu
 - `nodes_list` - Nodes with diagnostic data available
 - `node_diagnostics_get` - Comprehensive node diagnostics (kubelet, sysinfo, CPU/IRQ, hardware)
 - `node_kubelet_logs` - Kubelet logs (auto-decompressed from .gz)
+- `node_kubelet_logs_grep` - Filter kubelet logs by string with optional case-insensitive search
 
 **ETCD:**
 - `etcd_health` - Cluster health, endpoint status, alarms
@@ -165,6 +166,8 @@ Flags:
 ### Pod & Node Diagnostics
 - "Get logs for pod X in namespace Y"
 - "Show me kubelet logs for node Z"
+- "Filter kubelet logs for node Z by 'error' string"
+- "Search for 'OOM' in kubelet logs for all nodes"
 - "List all nodes with diagnostic data"
 - "Get comprehensive diagnostics for node A"
 

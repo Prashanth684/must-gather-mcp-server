@@ -58,12 +58,12 @@ func etcdMembersList(params api.ToolHandlerParams) (*api.ToolCallResult, error) 
 
 	var memberList struct {
 		Header struct {
-			ClusterID int64 `json:"cluster_id"`
-			MemberID  int64 `json:"member_id"`
-			RaftTerm  int   `json:"raft_term"`
+			ClusterID uint64 `json:"cluster_id"`
+			MemberID  uint64 `json:"member_id"`
+			RaftTerm  int    `json:"raft_term"`
 		} `json:"header"`
 		Members []struct {
-			ID         int64    `json:"ID"`
+			ID         uint64   `json:"ID"`
 			Name       string   `json:"name"`
 			PeerURLs   []string `json:"peerURLs"`
 			ClientURLs []string `json:"clientURLs"`
@@ -119,14 +119,14 @@ func etcdEndpointStatus(params api.ToolHandlerParams) (*api.ToolCallResult, erro
 		Endpoint string `json:"Endpoint"`
 		Status   struct {
 			Header struct {
-				ClusterID int64 `json:"cluster_id"`
-				MemberID  int64 `json:"member_id"`
-				Revision  int64 `json:"revision"`
-				RaftTerm  int   `json:"raft_term"`
+				ClusterID uint64 `json:"cluster_id"`
+				MemberID  uint64 `json:"member_id"`
+				Revision  int64  `json:"revision"`
+				RaftTerm  int    `json:"raft_term"`
 			} `json:"header"`
 			Version          string `json:"version"`
 			DBSize           int64  `json:"dbSize"`
-			Leader           int64  `json:"leader"`
+			Leader           uint64 `json:"leader"`
 			RaftIndex        int64  `json:"raftIndex"`
 			RaftTerm         int    `json:"raftTerm"`
 			RaftAppliedIndex int64  `json:"raftAppliedIndex"`
@@ -146,7 +146,7 @@ func etcdEndpointStatus(params api.ToolHandlerParams) (*api.ToolCallResult, erro
 	output += fmt.Sprintf("Total Endpoints: %d\n\n", len(statuses))
 
 	// Find leader
-	var leaderID int64
+	var leaderID uint64
 	if len(statuses) > 0 {
 		leaderID = statuses[0].Status.Leader
 	}

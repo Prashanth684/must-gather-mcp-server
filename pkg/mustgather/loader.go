@@ -242,6 +242,9 @@ func loadSingleResourceFile(path string) (*unstructured.Unstructured, error) {
 		return nil, nil
 	}
 
+	// Normalize YAML types to JSON-compatible types
+	normalizeYAMLTypes(obj)
+
 	return &unstructured.Unstructured{Object: obj}, nil
 }
 
@@ -265,6 +268,9 @@ func loadMultiResourceFile(path string) ([]*unstructured.Unstructured, error) {
 	if len(obj) == 0 {
 		return resources, nil
 	}
+
+	// Normalize YAML types to JSON-compatible types
+	normalizeYAMLTypes(obj)
 
 	// Check if it's a list
 	kind, _, _ := unstructured.NestedString(obj, "kind")
@@ -293,4 +299,42 @@ func loadMultiResourceFile(path string) ([]*unstructured.Unstructured, error) {
 func isYAMLFile(path string) bool {
 	ext := strings.ToLower(filepath.Ext(path))
 	return ext == ".yaml" || ext == ".yml"
+}
+
+// normalizeYAMLTypes recursively converts YAML types to JSON-compatible types.
+// This is needed because yaml.v3 unmarshals integers as Go int, but Kubernetes
+// DeepCopy expects int64 or float64 (JSON-compatible types).
+func normalizeYAMLTypes(obj interface{}) interface{} {
+	switch v := obj.(type) {
+	case map[string]interface{}:
+		for key, value := range v {
+			v[key] = normalizeYAMLTypes(value)
+		}
+		return v
+	case []interface{}:
+		for i, value := range v {
+			v[i] = normalizeYAMLTypes(value)
+		}
+		return v
+	case int:
+		return int64(v)
+	case uint:
+		return int64(v)
+	case uint64:
+		return int64(v)
+	case int32:
+		return int64(v)
+	case uint32:
+		return int64(v)
+	case int16:
+		return int64(v)
+	case uint16:
+		return int64(v)
+	case int8:
+		return int64(v)
+	case uint8:
+		return int64(v)
+	default:
+		return v
+	}
 }

@@ -68,6 +68,35 @@ func nodeTools() []api.ServerTool {
 			},
 			Handler: nodeKubeletLogs,
 		},
+		{
+			Tool: api.Tool{
+				Name:        "node_kubelet_logs_grep",
+				Description: "Filter kubelet logs for a specific node by a search string. Returns only lines containing the specified string.",
+				InputSchema: &jsonschema.Schema{
+					Type: "object",
+					Properties: map[string]*jsonschema.Schema{
+						"node": {
+							Type:        "string",
+							Description: "Node name",
+						},
+						"filter": {
+							Type:        "string",
+							Description: "String to search for in log lines (case-sensitive)",
+						},
+						"tail": {
+							Type:        "integer",
+							Description: "Maximum number of matching lines to return (0 or omit for all matches)",
+						},
+						"caseInsensitive": {
+							Type:        "boolean",
+							Description: "Perform case-insensitive search (default: false)",
+						},
+					},
+					Required: []string{"node", "filter"},
+				},
+			},
+			Handler: nodeKubeletLogsGrep,
+		},
 	}
 }
 
@@ -219,6 +248,74 @@ func nodeKubeletLogs(params api.ToolHandlerParams) (*api.ToolCallResult, error) 
 	}
 	output += ":\n\n"
 	output += logs
+
+	return api.NewToolCallResult(output, nil), nil
+}
+
+func nodeKubeletLogsGrep(params api.ToolHandlerParams) (*api.ToolCallResult, error) {
+	node := params.GetString("node", "")
+	filter := params.GetString("filter", "")
+	tail := params.GetInt("tail", 0)
+	caseInsensitive := params.GetBool("caseInsensitive", false)
+
+	if node == "" {
+		return api.NewToolCallResult("", fmt.Errorf("node is required")), nil
+	}
+
+	if filter == "" {
+		return api.NewToolCallResult("", fmt.Errorf("filter string is required")), nil
+	}
+
+	diag, err := params.MustGatherProvider.GetNodeDiagnostics(node)
+	if err != nil {
+		return api.NewToolCallResult("", fmt.Errorf("failed to get node diagnostics: %w", err)), nil
+	}
+
+	if diag.KubeletLog == "" {
+		return api.NewToolCallResult("", fmt.Errorf("kubelet log not found for node %s", node)), nil
+	}
+
+	// Filter the logs
+	matchingLines := make([]string, 0)
+	lines := strings.Split(diag.KubeletLog, "\n")
+
+	// Prepare filter string for comparison
+	searchFilter := filter
+	if caseInsensitive {
+		searchFilter = strings.ToLower(filter)
+	}
+
+	for _, line := range lines {
+		compareLine := line
+		if caseInsensitive {
+			compareLine = strings.ToLower(line)
+		}
+
+		if strings.Contains(compareLine, searchFilter) {
+			matchingLines = append(matchingLines, line)
+
+			// Apply tail limit if specified
+			if tail > 0 && len(matchingLines) > tail {
+				matchingLines = matchingLines[len(matchingLines)-tail:]
+			}
+		}
+	}
+
+	// Build output
+	output := fmt.Sprintf("Kubelet logs for node %s filtered by '%s'", node, filter)
+	if caseInsensitive {
+		output += " (case-insensitive)"
+	}
+	if tail > 0 {
+		output += fmt.Sprintf(" (last %d matches)", tail)
+	}
+	output += fmt.Sprintf(":\n\nFound %d matching line(s)\n\n", len(matchingLines))
+
+	if len(matchingLines) == 0 {
+		output += "No matching lines found."
+	} else {
+		output += strings.Join(matchingLines, "\n")
+	}
 
 	return api.NewToolCallResult(output, nil), nil
 }
