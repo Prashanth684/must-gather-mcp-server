@@ -10,6 +10,7 @@ import (
 	_ "github.com/openshift/must-gather-mcp-server/pkg/toolsets/cluster"
 	_ "github.com/openshift/must-gather-mcp-server/pkg/toolsets/core"
 	_ "github.com/openshift/must-gather-mcp-server/pkg/toolsets/diagnostics"
+	_ "github.com/openshift/must-gather-mcp-server/pkg/toolsets/monitoring"
 	_ "github.com/openshift/must-gather-mcp-server/pkg/toolsets/network"
 
 	"github.com/openshift/must-gather-mcp-server/pkg/mcp"

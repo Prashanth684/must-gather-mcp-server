@@ -2,17 +2,18 @@
 
 ## ✅ Project Complete
 
-A comprehensive Model Context Protocol (MCP) server for analyzing OpenShift must-gather archives, providing AI assistants with 21 powerful tools across 4 toolsets.
+A comprehensive Model Context Protocol (MCP) server for analyzing OpenShift must-gather archives, providing AI assistants with 30 powerful tools across 5 toolsets.
 
 ## 📊 Final Statistics
 
-### Toolsets: 4
+### Toolsets: 5
 - **Cluster** (6 tools) - Cluster-level configuration and status
 - **Core** (3 tools) - Kubernetes resource access
 - **Diagnostics** (9 tools) - Pod logs, node diagnostics, ETCD health
 - **Network** (3 tools) - Network connectivity and performance
+- **Monitoring** (8 tools) - Prometheus and AlertManager observability
 
-### Total Tools: 21
+### Total Tools: 30
 
 ### Data Coverage
 - **11,100 YAML resources** loaded and indexed
@@ -58,6 +59,21 @@ A comprehensive Model Context Protocol (MCP) server for analyzing OpenShift must
 2. **network_ovn_resources** - OVN component resource usage
 3. **network_connectivity_check** - Connectivity test results
 
+### Monitoring Tools (8)
+**Prometheus Core Health:**
+1. **monitoring_prometheus_status** - Server status with TSDB statistics
+2. **monitoring_prometheus_targets** - Scrape targets with health filtering
+3. **monitoring_prometheus_tsdb** - Detailed TSDB statistics with top metrics
+
+**Alert & Rule Management:**
+4. **monitoring_alertmanager_status** - AlertManager cluster status
+5. **monitoring_prometheus_rules** - Recording and alerting rules
+6. **monitoring_prometheus_alerts** - Active alerts with severity filtering
+
+**Configuration & Discovery:**
+7. **monitoring_prometheus_config_summary** - Configuration overview
+8. **monitoring_servicemonitor_list** - ServiceMonitor CRD listing
+
 ## 🚀 Transport Modes
 
 ### STDIO Mode (Default)
@@ -86,6 +102,7 @@ For Goose and HTTP-based MCP clients:
 - **CLUSTER_TOOLSET.md** - Cluster tools reference
 - **DIAGNOSTICS_MODULE.md** - Diagnostics tools reference
 - **NETWORK_AND_ETCD_TOOLS.md** - Network and ETCD tools reference
+- **MONITORING_IMPLEMENTATION.md** - Monitoring toolset reference
 - **TESTING_GUIDE.md** - Testing instructions
 
 ### Technical Documentation
@@ -115,7 +132,8 @@ must-gather/
 ├── nodes/                    # Node diagnostics (kubelet logs)
 ├── etcd_info/                # ETCD health and metrics
 ├── network_logs/             # Network scale and OVN data
-└── pod_network_connectivity_check/ # Connectivity tests
+├── pod_network_connectivity_check/ # Connectivity tests
+└── monitoring/               # Prometheus and AlertManager data
 ```
 
 ## 🎓 Usage Examples
@@ -176,6 +194,13 @@ npx @modelcontextprotocol/inspector@latest \
 - "Show kubelet logs for node Z with errors"
 - "Get comprehensive node diagnostics"
 
+**Monitoring:**
+- "What's the Prometheus TSDB status?"
+- "Show me all failing scrape targets"
+- "List all critical alerts"
+- "What are the top metrics by series count?"
+- "Show me AlertManager cluster status"
+
 ## ✅ Build Status
 
 ```bash
@@ -192,10 +217,11 @@ Loading must-gather from: /path/to/must-gather
 Loaded 11100 resources from 69 namespaces
 Building resource index...
 Index built with 10655 resources
-Registered 4 toolsets
+Registered 5 toolsets
 Registering 6 tools from toolset: cluster
 Registering 3 tools from toolset: core
 Registering 9 tools from toolset: diagnostics
+Registering 8 tools from toolset: monitoring
 Registering 3 tools from toolset: network
 Starting must-gather MCP server in STDIO mode...
 
@@ -260,7 +286,7 @@ When ready for release:
 
 ## 🎉 Summary
 
-This must-gather MCP server provides comprehensive analysis capabilities for OpenShift clusters through must-gather archives. With 21 tools across 4 toolsets and support for both STDIO and HTTP/SSE transports, it enables AI assistants to perform deep troubleshooting of:
+This must-gather MCP server provides comprehensive analysis capabilities for OpenShift clusters through must-gather archives. With 30 tools across 5 toolsets and support for both STDIO and HTTP/SSE transports, it enables AI assistants to perform deep troubleshooting of:
 
 - ✅ Cluster configuration and health
 - ✅ Operator status and versions
@@ -268,5 +294,7 @@ This must-gather MCP server provides comprehensive analysis capabilities for Ope
 - ✅ ETCD database and consensus
 - ✅ Network connectivity and performance
 - ✅ Pod logs and container diagnostics
+- ✅ Prometheus monitoring and metrics
+- ✅ AlertManager alerts and rules
 
 The implementation is production-ready, well-documented, and ready for use with Claude Desktop, Goose, MCP Inspector, and other MCP clients.

@@ -19,7 +19,7 @@ The must-gather MCP server enables AI assistants to deeply analyze OpenShift clu
 - **Fast Queries**: <50ms for indexed resource lookups
 - **On-Demand Logs**: Logs loaded only when requested
 
-### 🛠️ Tool Categories (22 Tools Across 4 Toolsets)
+### 🛠️ Tool Categories (30 Tools Across 5 Toolsets)
 
 #### Cluster Toolset (6 tools)
 - `cluster_version_get` - OpenShift version, update status, capabilities
@@ -55,6 +55,21 @@ The must-gather MCP server enables AI assistants to deeply analyze OpenShift clu
 - `network_scale_get` - Network resource counts (services, pods, policies)
 - `network_ovn_resources` - OVN Kubernetes component resource usage
 - `network_connectivity_check` - Pod connectivity test results with failure analysis
+
+#### Monitoring Toolset (8 tools)
+**Prometheus Core Health:**
+- `monitoring_prometheus_status` - Server status with TSDB statistics and runtime information
+- `monitoring_prometheus_targets` - Scrape targets with health filtering
+- `monitoring_prometheus_tsdb` - Detailed TSDB statistics with top metrics and label cardinality
+
+**Alert & Rule Management:**
+- `monitoring_alertmanager_status` - AlertManager cluster status and version info
+- `monitoring_prometheus_rules` - Recording and alerting rules with health status
+- `monitoring_prometheus_alerts` - Active alerts with severity filtering
+
+**Configuration & Discovery:**
+- `monitoring_prometheus_config_summary` - Configuration overview with scrape jobs and global settings
+- `monitoring_servicemonitor_list` - ServiceMonitor CRD listing for scrape target discovery
 
 ## Installation
 
@@ -171,6 +186,15 @@ Flags:
 - "List all nodes with diagnostic data"
 - "Get comprehensive diagnostics for node A"
 
+### Monitoring & Observability
+- "What's the Prometheus server status and TSDB statistics?"
+- "Show me all failing Prometheus scrape targets"
+- "List all critical alerts currently firing"
+- "What are the top metrics by series count?"
+- "Show me the AlertManager cluster status"
+- "List all ServiceMonitors in the cluster"
+- "What alerting rules are configured?"
+
 ## Building
 
 ### Requirements
@@ -218,7 +242,15 @@ must-gather/
 │   ├── nodes/                         # Node diagnostics
 │   ├── etcd_info/                     # ETCD health and metrics
 │   ├── network_logs/                  # Network scale and OVN metrics
-│   └── pod_network_connectivity_check/ # Connectivity test results
+│   ├── pod_network_connectivity_check/ # Connectivity test results
+│   └── monitoring/                    # Prometheus and AlertManager data
+│       ├── alertmanager/              # AlertManager status
+│       ├── prometheus/                # Prometheus metrics and configuration
+│       │   ├── prometheus-k8s-0/      # Replica 0 (targets, TSDB stats)
+│       │   ├── prometheus-k8s-1/      # Replica 1 (targets, TSDB stats)
+│       │   ├── rules.json             # Alerting and recording rules
+│       │   └── status/                # Shared configuration and flags
+│       └── servicemonitors/           # ServiceMonitor CRDs
 ```
 
 ### Tool Categories
@@ -239,6 +271,7 @@ must-gather/
 - [CLUSTER_TOOLSET.md](CLUSTER_TOOLSET.md) - Cluster-level tools documentation
 - [DIAGNOSTICS_MODULE.md](DIAGNOSTICS_MODULE.md) - Diagnostics tools documentation
 - [NETWORK_AND_ETCD_TOOLS.md](NETWORK_AND_ETCD_TOOLS.md) - Network and ETCD tools documentation
+- [MONITORING_IMPLEMENTATION.md](MONITORING_IMPLEMENTATION.md) - Monitoring toolset documentation
 - [LOADER_ANALYSIS.md](LOADER_ANALYSIS.md) - Loader implementation details
 - [TESTING_GUIDE.md](TESTING_GUIDE.md) - Testing instructions
 

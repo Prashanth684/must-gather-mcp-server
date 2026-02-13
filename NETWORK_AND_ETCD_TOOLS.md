@@ -295,7 +295,7 @@ Leader ID: 8695595020199737803
 
 ## Tool Count Summary
 
-**Total Tools**: 21
+**Total Tools**: 30
 
 ### By Toolset:
 - **Cluster**: 6 tools (version, info, operators, nodes)
@@ -303,17 +303,26 @@ Leader ID: 8695595020199737803
 - **Diagnostics**: 9 tools (pod logs, node diagnostics, ETCD health + extended)
   - etcd_health
   - etcd_object_count
-  - **etcd_members_list** ← NEW
-  - **etcd_endpoint_status** ← NEW
+  - etcd_members_list
+  - etcd_endpoint_status
   - pod_logs_get
   - pod_containers_list
   - nodes_list
   - node_diagnostics_get
   - node_kubelet_logs
-- **Network**: 3 tools ← NEW TOOLSET
-  - **network_scale_get** ← NEW
-  - **network_ovn_resources** ← NEW
-  - **network_connectivity_check** ← NEW
+- **Network**: 3 tools
+  - network_scale_get
+  - network_ovn_resources
+  - network_connectivity_check
+- **Monitoring**: 8 tools (Prometheus and AlertManager observability)
+  - monitoring_prometheus_status
+  - monitoring_prometheus_targets
+  - monitoring_prometheus_tsdb
+  - monitoring_alertmanager_status
+  - monitoring_prometheus_rules
+  - monitoring_prometheus_alerts
+  - monitoring_prometheus_config_summary
+  - monitoring_servicemonitor_list
 
 ## Build Status
 

@@ -433,13 +433,15 @@ These tools enable AI assistants to perform cluster-level troubleshooting:
 
 ✅ **Build Successful**
 ```
-Registered 3 toolsets
+Registered 5 toolsets
 Registering 6 tools from toolset: cluster
 Registering 3 tools from toolset: core
-Registering 7 tools from toolset: diagnostics
+Registering 9 tools from toolset: diagnostics
+Registering 8 tools from toolset: monitoring
+Registering 3 tools from toolset: network
 ```
 
-**Total Tools**: 16 (6 cluster + 3 core + 7 diagnostics)
+**Total Tools**: 30 (6 cluster + 3 core + 9 diagnostics + 8 monitoring + 3 network)
 
 ## Future Enhancements
 
