@@ -18,6 +18,7 @@ func (t *Toolset) GetTools() []api.ServerTool {
 	tools := make([]api.ServerTool, 0)
 	tools = append(tools, resourcesTools()...)
 	tools = append(tools, namespacesTools()...)
+	tools = append(tools, eventsTools()...)
 	return tools
 }
 

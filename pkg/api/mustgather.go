@@ -31,6 +31,14 @@ type MustGatherProvider interface {
 	// Node diagnostics
 	GetNodeDiagnostics(nodeName string) (*NodeDiagnostics, error)
 	ListNodes() ([]string, error)
+
+	// Host service logs
+	ListHostServiceLogs() ([]string, error)
+	GetHostServiceLog(serviceName string, tailLines int) (string, error)
+
+	// Static pod termination logs
+	ListStaticPodTerminationLogs() (map[string][]string, error)
+	GetStaticPodTerminationLog(podType, nodeName string) (string, error)
 }
 
 // MustGatherMetadata contains metadata about the must-gather

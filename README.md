@@ -19,9 +19,10 @@ The must-gather MCP server enables AI assistants to deeply analyze OpenShift clu
 - **Fast Queries**: <50ms for indexed resource lookups
 - **On-Demand Logs**: Logs loaded only when requested
 
-### 🛠️ Tool Categories (30 Tools Across 5 Toolsets)
+### 🛠️ Tool Categories (57 Tools Across 5 Toolsets)
 
-#### Cluster Toolset (6 tools)
+#### Cluster Toolset (23 tools)
+**Version & Info (6 tools):**
 - `cluster_version_get` - OpenShift version, update status, capabilities
 - `cluster_info_get` - Infrastructure (platform, region, topology, network config)
 - `cluster_operators_list` - All operators with Available/Progressing/Degraded status
@@ -29,23 +30,71 @@ The must-gather MCP server enables AI assistants to deeply analyze OpenShift clu
 - `cluster_nodes_list` - Nodes with roles, status, kubelet version
 - `cluster_node_get` - Detailed node info (capacity, conditions, taints)
 
-#### Core Toolset (3 tools)
+**Machine Configuration (4 tools):**
+- `machineconfig_list` - List all MachineConfigs (OS and systemd configuration)
+- `machineconfig_get` - Get detailed MachineConfig including ignition configuration
+- `machineconfigpool_status` - Check pool degradation and update status
+- `machineconfignode_status` - Per-node config application status
+
+**Storage (4 tools):**
+- `storage_classes_list` - List StorageClasses with provisioners and defaults
+- `csi_drivers_status` - CSI driver capabilities and status
+- `volume_attachments_list` - Find stuck or failing volume mounts
+- `persistent_volumes_status` - PV status (available, bound, failed)
+
+**Security & RBAC (2 tools):**
+- `security_scc_list` - SecurityContextConstraints with privilege analysis
+- `rbac_clusterroles_list` - ClusterRoles with dangerous permission detection
+
+**OLM/Operators (3 tools):**
+- `olm_subscriptions_status` - Operator subscription and upgrade status
+- `olm_catalogsources_status` - Catalog source connectivity and health
+- `olm_installplans_status` - Pending operator installations
+
+**Admission Control (2 tools):**
+- `admission_webhooks_list` - Validating and mutating webhooks
+- `admission_policies_list` - CEL-based admission policies
+
+**Configuration (2 tools):**
+- `cluster_config_list` - List all config.openshift.io resources
+- `cluster_config_get` - Get detailed cluster configuration
+
+#### Core Toolset (6 tools)
+**Resources (3 tools):**
 - `resources_get` - Get any Kubernetes resource by kind/name/namespace
 - `resources_list` - List resources with label/field selectors
 - `namespaces_list` - List all namespaces
 
-#### Diagnostics Toolset (10 tools)
-**Pod Logs:**
+**Events (3 tools):**
+- `events_list` - Filter events by type/namespace/reason
+- `events_timeline` - Chronological event sequence for incident analysis
+- `events_by_resource` - All events for specific pods/nodes/deployments
+
+#### Diagnostics Toolset (17 tools)
+**Pod Logs (2 tools):**
 - `pod_logs_get` - Container logs (current/previous) with tail support
 - `pod_containers_list` - Discover containers with logs
 
-**Node Diagnostics:**
+**Node Diagnostics (4 tools):**
 - `nodes_list` - Nodes with diagnostic data available
 - `node_diagnostics_get` - Comprehensive node diagnostics (kubelet, sysinfo, CPU/IRQ, hardware)
 - `node_kubelet_logs` - Kubelet logs (auto-decompressed from .gz)
 - `node_kubelet_logs_grep` - Filter kubelet logs by string with optional case-insensitive search
 
-**ETCD:**
+**Extended Node Diagnostics (3 tools):**
+- `node_hardware_info` - CPU topology, PCI devices, network interfaces
+- `node_dmesg_errors` - Parse kernel logs for errors, OOM kills, hardware issues
+- `node_kernel_info` - Kernel boot parameters and configuration
+
+**Host Service Logs (3 tools):**
+- `host_service_logs_list` - List systemd services (kubelet, crio, NetworkManager, etc.)
+- `host_service_logs_get` - Get specific service logs with tail support
+- `host_service_logs_grep` - Search across all host service logs
+
+**Static Pods (1 tool):**
+- `static_pod_termination_logs` - Control plane pod crash logs (kube-apiserver, etcd, etc.)
+
+**ETCD (4 tools):**
 - `etcd_health` - Cluster health, endpoint status, alarms
 - `etcd_object_count` - Resource type object counts
 - `etcd_members_list` - Member IDs, peer/client URLs
@@ -167,6 +216,33 @@ Flags:
 - "List all master nodes and their status"
 - "What platform is this cluster on and what region?"
 
+### Machine Configuration
+- "Show me all MachineConfigPools and their status"
+- "Are any nodes degraded due to machine config issues?"
+- "What MachineConfigs are applied to worker nodes?"
+
+### Storage Troubleshooting
+- "Which is the default StorageClass?"
+- "Show me all failing volume attachments"
+- "List all PersistentVolumes that are in Failed state"
+- "What CSI drivers are available in the cluster?"
+
+### Security & RBAC
+- "Which SecurityContextConstraints allow privileged containers?"
+- "Show me ClusterRoles with wildcard permissions"
+- "List all users with access to the privileged SCC"
+
+### Operator Lifecycle (OLM)
+- "Are there any operator subscriptions in UpgradeFailed state?"
+- "Show me pending InstallPlans that need approval"
+- "Is the certified-operators catalog source healthy?"
+
+### Events & Incidents
+- "Show me all Warning events from the last hour"
+- "What events happened to pod X?"
+- "Timeline of events for namespace Y in the last 2 hours"
+- "Find all events with reason 'BackOff' or 'Failed'"
+
 ### ETCD Monitoring
 - "Check ETCD cluster health"
 - "What's the ETCD database size and quota usage?"
@@ -185,6 +261,29 @@ Flags:
 - "Search for 'OOM' in kubelet logs for all nodes"
 - "List all nodes with diagnostic data"
 - "Get comprehensive diagnostics for node A"
+
+### Extended Node Diagnostics
+- "Show me hardware information for node X (CPU, PCI devices)"
+- "Parse dmesg for errors and OOM kills across all nodes"
+- "What are the kernel boot parameters for node Y?"
+
+### Host-Level Debugging
+- "List all host systemd service logs"
+- "Show me crio service logs for the last 100 lines"
+- "Search for 'error' across all host service logs"
+
+### Control Plane Debugging
+- "Show me kube-apiserver termination logs for master-0"
+- "Are there any control plane pod crashes?"
+
+### Admission Control
+- "List all validating and mutating webhooks"
+- "What admission policies are configured?"
+
+### Configuration
+- "List all cluster configuration resources"
+- "Show me the OAuth configuration"
+- "What FeatureGates are enabled?"
 
 ### Monitoring & Observability
 - "What's the Prometheus server status and TSDB statistics?"

@@ -25,5 +25,11 @@ func (t *ClusterToolset) GetTools() []api.ServerTool {
 	tools = append(tools, infoTools()...)
 	tools = append(tools, operatorTools()...)
 	tools = append(tools, nodeTools()...)
+	tools = append(tools, machineConfigTools()...)
+	tools = append(tools, storageTools()...)
+	tools = append(tools, securityTools()...)
+	tools = append(tools, olmTools()...)
+	tools = append(tools, admissionTools()...)
+	tools = append(tools, configTools()...)
 	return tools
 }

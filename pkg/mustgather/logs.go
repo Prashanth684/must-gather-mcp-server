@@ -251,3 +251,135 @@ func tailLinesFromGzip(path string, n int) (string, error) {
 
 	return strings.Join(lines, "\n"), nil
 }
+
+// ListHostServiceLogs lists all available host service log files
+func (p *Provider) ListHostServiceLogs() ([]string, error) {
+	containerDir, err := findContainerDir(p.path)
+	if err != nil {
+		containerDir = p.path
+	}
+
+	// Check for masters directory (primary location)
+	mastersDir := filepath.Join(containerDir, "host_service_logs", "masters")
+	services := make([]string, 0)
+
+	if _, err := os.Stat(mastersDir); err == nil {
+		entries, err := os.ReadDir(mastersDir)
+		if err != nil {
+			return nil, fmt.Errorf("failed to read host_service_logs directory: %w", err)
+		}
+
+		for _, entry := range entries {
+			if !entry.IsDir() && strings.HasSuffix(entry.Name(), ".log") {
+				// Remove _service.log suffix to get service name
+				serviceName := strings.TrimSuffix(entry.Name(), "_service.log")
+				services = append(services, serviceName)
+			}
+		}
+	}
+
+	return services, nil
+}
+
+// GetHostServiceLog retrieves a specific host service log
+func (p *Provider) GetHostServiceLog(serviceName string, tailLines int) (string, error) {
+	containerDir, err := findContainerDir(p.path)
+	if err != nil {
+		containerDir = p.path
+	}
+
+	// Construct log path
+	logFile := serviceName + "_service.log"
+	logPath := filepath.Join(containerDir, "host_service_logs", "masters", logFile)
+
+	// Check if file exists
+	if _, err := os.Stat(logPath); os.IsNotExist(err) {
+		return "", fmt.Errorf("service log not found: %s", serviceName)
+	}
+
+	// Read the log file
+	content, err := readTextFile(logPath)
+	if err != nil {
+		return "", fmt.Errorf("failed to read service log: %w", err)
+	}
+
+	// Apply tail limit if specified
+	if tailLines > 0 {
+		content = TailLines(content, tailLines)
+	}
+
+	return content, nil
+}
+
+// ListStaticPodTerminationLogs lists available static pod termination logs
+func (p *Provider) ListStaticPodTerminationLogs() (map[string][]string, error) {
+	containerDir, err := findContainerDir(p.path)
+	if err != nil {
+		containerDir = p.path
+	}
+
+	staticPodsDir := filepath.Join(containerDir, "static-pods")
+	result := make(map[string][]string)
+
+	// Check if directory exists
+	if _, err := os.Stat(staticPodsDir); os.IsNotExist(err) {
+		return result, nil
+	}
+
+	// List pod type directories (e.g., kube-apiserver, etcd)
+	podTypes, err := os.ReadDir(staticPodsDir)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read static-pods directory: %w", err)
+	}
+
+	for _, podType := range podTypes {
+		if !podType.IsDir() {
+			continue
+		}
+
+		podTypeDir := filepath.Join(staticPodsDir, podType.Name())
+		logs, err := os.ReadDir(podTypeDir)
+		if err != nil {
+			continue
+		}
+
+		nodeTerminationLogs := []string{}
+		for _, log := range logs {
+			if !log.IsDir() && strings.HasSuffix(log.Name(), "-termination.log.gz") {
+				// Extract node name from filename
+				nodeName := strings.TrimSuffix(log.Name(), "-termination.log.gz")
+				nodeTerminationLogs = append(nodeTerminationLogs, nodeName)
+			}
+		}
+
+		if len(nodeTerminationLogs) > 0 {
+			result[podType.Name()] = nodeTerminationLogs
+		}
+	}
+
+	return result, nil
+}
+
+// GetStaticPodTerminationLog retrieves termination log for a static pod
+func (p *Provider) GetStaticPodTerminationLog(podType, nodeName string) (string, error) {
+	containerDir, err := findContainerDir(p.path)
+	if err != nil {
+		containerDir = p.path
+	}
+
+	logFile := nodeName + "-termination.log.gz"
+	logPath := filepath.Join(containerDir, "static-pods", podType, logFile)
+
+	// Check if file exists
+	if _, err := os.Stat(logPath); os.IsNotExist(err) {
+		return "", fmt.Errorf("termination log not found for %s on node %s", podType, nodeName)
+	}
+
+	// Read and decompress
+	content, err := readGzipFile(logPath)
+	if err != nil {
+		return "", fmt.Errorf("failed to read termination log: %w", err)
+	}
+
+	return content, nil
+}

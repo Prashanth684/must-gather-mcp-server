@@ -20,6 +20,9 @@ func (t *Toolset) GetTools() []api.ServerTool {
 	tools = append(tools, nodeTools()...)
 	tools = append(tools, etcdTools()...)
 	tools = append(tools, etcdExtendedTools()...)
+	tools = append(tools, hostServiceLogsTools()...)
+	tools = append(tools, staticPodTools()...)
+	tools = append(tools, nodeExtendedTools()...)
 	return tools
 }
 
