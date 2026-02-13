@@ -222,6 +222,35 @@ make fmt
 
 ## Architecture
 
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        MCP Client                               │
+│                  (Claude Desktop, Goose, etc.)                  │
+└────────────────────────────┬────────────────────────────────────┘
+                             │ MCP Protocol
+                             │ (STDIO or HTTP/SSE)
+┌────────────────────────────▼────────────────────────────────────┐
+│                   Must-Gather MCP Server                        │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │              30 MCP Tools (5 Toolsets)                   │   │
+│  │  Cluster | Core | Diagnostics | Network | Monitoring    │   │
+│  └─────────────────────┬────────────────────────────────────┘   │
+│                        │                                         │
+│  ┌─────────────────────▼──────────────┬──────────────────────┐  │
+│  │    In-Memory Index                 │  On-Demand Files     │  │
+│  │  • ~11k YAML resources             │  • Pod logs          │  │
+│  │  • GVK, namespace, labels          │  • Node diagnostics  │  │
+│  │  • <50ms lookups                   │  • ETCD metrics      │  │
+│  └────────────────────────────────────┴──────────────────────┘  │
+└────────────────────────────┬────────────────────────────────────┘
+                             │
+┌────────────────────────────▼────────────────────────────────────┐
+│                   Must-Gather Archive                           │
+│  cluster-scoped-resources/ | namespaces/ | nodes/ | etcd_info/  │
+│  network_logs/ | pod_network_connectivity_check/ | monitoring/  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
 ### Data Loading
 1. **Startup**: Loads YAML resources from cluster-scoped-resources/ and namespaces/
 2. **Indexing**: Builds in-memory index by GVK, namespace, and labels (~5-10s)
