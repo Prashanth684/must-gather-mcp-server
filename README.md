@@ -19,9 +19,9 @@ The must-gather MCP server enables AI assistants to deeply analyze OpenShift clu
 - **Fast Queries**: <50ms for indexed resource lookups
 - **On-Demand Logs**: Logs loaded only when requested
 
-### 🛠️ Tool Categories (57 Tools Across 5 Toolsets)
+### 🛠️ Tool Categories (61 Tools Across 5 Toolsets)
 
-#### Cluster Toolset (23 tools)
+#### Cluster Toolset (27 tools)
 **Version & Info (6 tools):**
 - `cluster_version_get` - OpenShift version, update status, capabilities
 - `cluster_info_get` - Infrastructure (platform, region, topology, network config)
@@ -58,6 +58,12 @@ The must-gather MCP server enables AI assistants to deeply analyze OpenShift clu
 **Configuration (2 tools):**
 - `cluster_config_list` - List all config.openshift.io resources
 - `cluster_config_get` - Get detailed cluster configuration
+
+**Ingress & Routing (4 tools):**
+- `routes_list` - List OpenShift Routes with hosts, services, TLS config, and admission status
+- `route_get` - Get detailed Route information including backend weights and TLS termination
+- `ingress_list` - List Kubernetes Ingress resources with rules and backends
+- `ingresscontroller_status` - Get IngressController (router) status, replicas, and conditions
 
 #### Core Toolset (6 tools)
 **Resources (3 tools):**
@@ -284,6 +290,13 @@ Flags:
 - "List all cluster configuration resources"
 - "Show me the OAuth configuration"
 - "What FeatureGates are enabled?"
+
+### Ingress & Routing
+- "List all Routes showing their admission status"
+- "Show me details for route X in namespace Y"
+- "What's the status of the default IngressController?"
+- "List all Routes with TLS edge termination"
+- "Are there any Kubernetes Ingress resources?"
 
 ### Monitoring & Observability
 - "What's the Prometheus server status and TSDB statistics?"

@@ -31,5 +31,6 @@ func (t *ClusterToolset) GetTools() []api.ServerTool {
 	tools = append(tools, olmTools()...)
 	tools = append(tools, admissionTools()...)
 	tools = append(tools, configTools()...)
+	tools = append(tools, ingressTools()...)
 	return tools
 }
