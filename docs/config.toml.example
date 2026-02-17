@@ -1,0 +1,58 @@
+# Example configuration for must-gather-mcp-server
+# Copy this to config.toml and customize for your environment
+
+# Server Settings
+port = "8080"
+log_level = 2
+must_gather_path = "/path/to/must-gather"
+
+# Stateless mode - disable client notifications (useful for load balancing)
+stateless = false
+
+# Server Instructions (optional)
+# Custom instructions provided to MCP clients
+server_instructions = "This server analyzes OpenShift must-gather data."
+
+# OAuth/OIDC Authentication Settings
+# Uncomment and configure to enable authentication
+
+# require_oauth = true
+# oauth_audience = "must-gather-mcp"
+# authorization_url = "https://keycloak.example.com/realms/openshift"
+# oauth_scopes = ["openid", "profile", "email"]
+
+# Disable dynamic client registration
+# disable_dynamic_client_registration = false
+
+# Security Token Service (STS) Configuration
+# Used for backend service-to-service authentication
+
+# sts_client_id = "mcp-backend-service"
+# sts_client_secret = "your-client-secret-here"
+# sts_audience = "kubernetes-api"
+# sts_scopes = ["cluster:admin"]
+
+# Certificate Authority (for HTTPS)
+# certificate_authority = "/path/to/ca.crt"
+
+# Server URL (used in OAuth discovery)
+# server_url = "https://mcp.example.com"
+
+# Telemetry Configuration (OpenTelemetry)
+[telemetry]
+enabled = false
+# endpoint = "http://jaeger:4318"
+# service_name = "must-gather-mcp-server"
+
+# Optional: Additional headers for OTLP requests
+# [telemetry.headers]
+# Authorization = "Bearer <token>"
+
+# Toolset Configuration
+# Specify which toolsets to enable (defaults to all)
+# toolsets = ["core", "cluster", "diagnostics", "monitoring", "network"]
+
+# Tool-level configuration
+# Enable/disable specific tools
+# enabled_tools = ["kubectl_get", "kubectl_describe"]
+# disabled_tools = ["kubectl_delete"]

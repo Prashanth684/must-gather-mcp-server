@@ -15,9 +15,12 @@ import (
 
 // Server represents the MCP server
 type Server struct {
-	server   *mcp.Server
-	provider api.MustGatherProvider
-	toolsets []api.Toolset
+	server      *mcp.Server
+	provider    api.MustGatherProvider
+	toolsets    []api.Toolset
+	toolCount   int
+	sseHandler  http.Handler
+	httpHandler http.Handler
 }
 
 // NewServer creates a new MCP server
@@ -45,6 +48,15 @@ func NewServer(provider api.MustGatherProvider, toolsets []api.Toolset) (*Server
 		return nil, fmt.Errorf("failed to register tools: %w", err)
 	}
 
+	// Create SSE handler for use by HTTP server
+	s.sseHandler = mcp.NewSSEHandler(func(r *http.Request) *mcp.Server {
+		return s.server
+	}, nil)
+
+	// For the streamable HTTP handler, we'll use the SSE handler
+	// The MCP SDK provides the same handler for both SSE and streamable HTTP
+	s.httpHandler = s.sseHandler
+
 	return s, nil
 }
 
@@ -56,8 +68,9 @@ func (s *Server) ServeStdio(ctx context.Context) error {
 	})
 }
 
-// ServeHTTP starts the MCP server with HTTP/SSE transport
-func (s *Server) ServeHTTP(ctx context.Context, addr string) error {
+// ServeHTTPStandalone starts the MCP server with HTTP/SSE transport as a standalone server
+// Deprecated: Use ServeHTTP() to get the handler and use the http package instead
+func (s *Server) ServeHTTPStandalone(ctx context.Context, addr string) error {
 	// Create SSE handler
 	handler := mcp.NewSSEHandler(func(r *http.Request) *mcp.Server {
 		return s.server
@@ -92,6 +105,33 @@ func (s *Server) ServeHTTP(ctx context.Context, addr string) error {
 	}
 }
 
+// ServeSSE returns the SSE handler for the MCP server
+func (s *Server) ServeSSE() http.Handler {
+	return s.sseHandler
+}
+
+// ServeHTTP returns the HTTP handler for the MCP server
+func (s *Server) ServeHTTP() http.Handler {
+	return s.httpHandler
+}
+
+// GetStats returns server statistics
+func (s *Server) GetStats() map[string]interface{} {
+	return map[string]interface{}{
+		"toolsets":   len(s.toolsets),
+		"tools":      s.toolCount,
+		"version":    version.Version,
+		"serverName": version.BinaryName,
+	}
+}
+
+// Shutdown gracefully shuts down the MCP server
+func (s *Server) Shutdown(ctx context.Context) error {
+	// The MCP SDK doesn't have a specific shutdown method,
+	// but we can prepare for future cleanup here
+	return nil
+}
+
 // registerTools registers all tools from toolsets
 func (s *Server) registerTools() error {
 	for _, toolset := range s.toolsets {
@@ -102,6 +142,7 @@ func (s *Server) registerTools() error {
 			if err := s.registerTool(tool); err != nil {
 				return fmt.Errorf("failed to register tool %s: %w", tool.Tool.Name, err)
 			}
+			s.toolCount++
 		}
 	}
 

@@ -207,12 +207,25 @@ Then start Goose and it will connect to the MCP server.
 
 ```
 Flags:
-  --must-gather-path string   Path to must-gather directory (required)
-  --http                      Run in HTTP/SSE mode instead of STDIO
-  --http-addr string          HTTP server address (default "localhost:8080")
-  --version                   Show version information
-  -h, --help                  help for must-gather-mcp-server
+  --must-gather-path string    Path to must-gather directory (required)
+  --http                       Run in HTTP/SSE mode instead of STDIO
+  --port string                HTTP server port (replaces deprecated --http-addr)
+  --http-addr string           HTTP server address (deprecated, use --port)
+
+  --config string              Path to configuration file
+  --config-dir string          Path to drop-in configuration directory
+
+  --log-level int              Log verbosity level (0-9)
+
+  --require-oauth              Require OAuth authentication
+  --oauth-audience string      OAuth audience for token validation
+  --authorization-url string   OIDC authorization server URL
+
+  --version                    Show version information
+  -h, --help                   help for must-gather-mcp-server
 ```
+
+For complete configuration options, see [Authentication Guide](docs/AUTHENTICATION.md).
 
 ## Example Queries
 
@@ -409,12 +422,9 @@ must-gather/
 
 ## Documentation
 
-- [CLUSTER_TOOLSET.md](CLUSTER_TOOLSET.md) - Cluster-level tools documentation
-- [DIAGNOSTICS_MODULE.md](DIAGNOSTICS_MODULE.md) - Diagnostics tools documentation
-- [NETWORK_AND_ETCD_TOOLS.md](NETWORK_AND_ETCD_TOOLS.md) - Network and ETCD tools documentation
-- [MONITORING_IMPLEMENTATION.md](MONITORING_IMPLEMENTATION.md) - Monitoring toolset documentation
-- [LOADER_ANALYSIS.md](LOADER_ANALYSIS.md) - Loader implementation details
-- [TESTING_GUIDE.md](TESTING_GUIDE.md) - Testing instructions
+- [Tools Reference](docs/TOOLS.md) - Complete reference for all 61 MCP tools
+- [Authentication Guide](docs/AUTHENTICATION.md) - OAuth/OIDC setup and configuration
+- [Development Guide](docs/DEVELOPMENT.md) - Building, testing, and contributing
 
 ## Performance
 
