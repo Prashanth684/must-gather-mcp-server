@@ -1,17 +1,17 @@
 # MCP Tools Reference
 
-Complete reference for all 61 tools across 5 toolsets in must-gather-mcp-server.
+Complete reference for all 62 tools across 5 toolsets in must-gather-mcp-server.
 
 ## Overview
 
-**Total Tools: 61** across 5 toolsets
-- Cluster Toolset: 27 tools
+**Total Tools: 62** across 5 toolsets
+- Cluster Toolset: 28 tools
 - Core Toolset: 6 tools
 - Diagnostics Toolset: 17 tools
 - Network Toolset: 3 tools
 - Monitoring Toolset: 8 tools
 
-## Cluster Toolset (27 tools)
+## Cluster Toolset (28 tools)
 
 ### Version & Info (6 tools)
 

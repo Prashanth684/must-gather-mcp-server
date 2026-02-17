@@ -19,9 +19,9 @@ The must-gather MCP server enables AI assistants to deeply analyze OpenShift clu
 - **Fast Queries**: <50ms for indexed resource lookups
 - **On-Demand Logs**: Logs loaded only when requested
 
-### 🛠️ Tool Categories (61 Tools Across 5 Toolsets)
+### 🛠️ Tool Categories (62 Tools Across 5 Toolsets)
 
-#### Cluster Toolset (27 tools)
+#### Cluster Toolset (28 tools)
 **Version & Info (6 tools):**
 - `cluster_version_get` - OpenShift version, update status, capabilities
 - `cluster_info_get` - Infrastructure (platform, region, topology, network config)
@@ -357,7 +357,7 @@ make fmt
 ┌────────────────────────────▼────────────────────────────────────┐
 │                   Must-Gather MCP Server                        │
 │  ┌──────────────────────────────────────────────────────────┐   │
-│  │              30 MCP Tools (5 Toolsets)                   │   │
+│  │              62 MCP Tools (5 Toolsets)                   │   │
 │  │  Cluster | Core | Diagnostics | Network | Monitoring    │   │
 │  └─────────────────────┬────────────────────────────────────┘   │
 │                        │                                         │
@@ -422,7 +422,7 @@ must-gather/
 
 ## Documentation
 
-- [Tools Reference](docs/TOOLS.md) - Complete reference for all 61 MCP tools
+- [Tools Reference](docs/TOOLS.md) - Complete reference for all 62 MCP tools
 - [Authentication Guide](docs/AUTHENTICATION.md) - OAuth/OIDC setup and configuration
 - [Development Guide](docs/DEVELOPMENT.md) - Building, testing, and contributing
 

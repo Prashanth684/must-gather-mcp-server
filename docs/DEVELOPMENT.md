@@ -16,7 +16,7 @@ Guide for developers working on must-gather-mcp-server, including architecture, 
 ┌────────────────────────────▼────────────────────────────────────┐
 │                   Must-Gather MCP Server                        │
 │  ┌──────────────────────────────────────────────────────────┐   │
-│  │              61 MCP Tools (5 Toolsets)                   │   │
+│  │              62 MCP Tools (5 Toolsets)                   │   │
 │  │  Cluster | Core | Diagnostics | Network | Monitoring    │   │
 │  └─────────────────────┬────────────────────────────────────┘   │
 │                        │                                         │
@@ -160,8 +160,8 @@ go tool cover -html=coverage.out
 ### Test Coverage
 
 Current test coverage:
-- ✅ `pkg/config` - 100% pass (15 tests)
-- ✅ `pkg/http` - 100% pass (28 tests)
+- ✅ `pkg/config` - 100% pass (25 tests)
+- ✅ `pkg/http` - 100% pass (55 tests)
 - ✅ All packages build successfully
 - ✅ Binary size: ~30MB
 
